@@ -28,7 +28,7 @@
 - [x] Inicializar matriz de adjacencia
 - [x] Imprimir matriz de adjacencia
 - [x] Ordenar por grau de vertice
-- [  ] TimSort
-- [  ] GRASP
-- [  ] ACO(BUSCA LOCAL)
+- [ ] TimSort
+- [ ] GRASP
+- [ ] ACO(BUSCA LOCAL)
      
