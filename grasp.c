@@ -21,22 +21,24 @@ int main()
  int N_vertex = Number_of_vertex(file_name);
 
  
- printf("Unsorted\n");
+ printf("Unsorted Matrix\n");
  
  print_matrix(Matrix,N_vertex);
  
-printf("RCL|| Maximun degree : %d\n",max_deg);
+printf("unsorted RCL|| Maximun degree : %d\n",max_deg);
 
 linked_list * rcl = RCL(Matrix,max_deg,N_vertex,alfa);
 print_list(rcl);
 
  //CocktailSort(Matrix,N_vertex);
- //printf("sorted\n");
+ //printf("Sorted Matrix\n");
+ //Choose_Random_RCL(rcl);
+ printf("\n%d",Choose_Random_RCL(rcl)+1);
  
  //print_matrix(Matrix,N_vertex);
-
+ 
 clock_t end = clock();
 double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-printf("Executed in : %f s\n", time_spent);
+printf("\nExecuted in : %f s\n", time_spent);
 return 0;
 }
