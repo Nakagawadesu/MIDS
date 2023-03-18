@@ -27,13 +27,14 @@ int main()
  
 printf("unsorted RCL|| Maximun degree : %d\n",max_deg);
 
-linked_list * rcl = RCL(Matrix,max_deg,N_vertex,alfa);
+linked_list * rcl = RCL(Matrix , max_deg,N_vertex , alfa);
 print_list(rcl);
-
+Solution * S = GRASP_construction(rcl , Matrix , N_vertex);
+print_solution(S);
  //CocktailSort(Matrix,N_vertex);
  //printf("Sorted Matrix\n");
  //Choose_Random_RCL(rcl);
- printf("\n%d",Choose_Random_RCL(rcl)+1);
+ //printf("\n%d",Choose_Random_RCL(rcl)+1);
  
  //print_matrix(Matrix,N_vertex);
  
