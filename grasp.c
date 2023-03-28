@@ -30,7 +30,10 @@ printf("unsorted RCL|| Maximun degree : %d\n",max_deg);
 linked_list * rcl = RCL(Matrix , max_deg,N_vertex , alfa);
 print_list(rcl);
 Solution * S = GRASP_construction(rcl , Matrix , N_vertex);
+
+S = GRASP_post_construction(Matrix , N_vertex , S);
 print_solution(S);
+printf("\nMin : %d\n", S->Min);
  //CocktailSort(Matrix,N_vertex);
  //printf("Sorted Matrix\n");
  //Choose_Random_RCL(rcl);

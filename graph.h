@@ -48,7 +48,7 @@ typedef struct Solution{
 // Linked Lists >>
 linked_list * create_list()
 {
-   linked_list * L = (struct linkedlist*)malloc(sizeof(linked_list));
+   linked_list * L = (linked_list*)malloc(sizeof(linked_list));
    L->head = NULL;
    L->foot = NULL;
    L->Min_degree = 0 ;
@@ -129,7 +129,7 @@ void print_list(linked_list * L)
         
     }
      printf(" %d|%d",aux->V + 1 , aux->D);
-    return 1;
+    
 }
 
 int Order_list();
@@ -263,10 +263,10 @@ Solution * create_solution(Adj_Matrix * M , int n)
 {
     Solution * S = (Solution*)malloc(sizeof(Solution));
     S->V = create_list();
-    for(int i = 0 ; i < n ; i++)
+   /* for(int i = 0 ; i < n ; i++)
     {
         insert_in_list(S->V ,i , M[i].degree );
-    }
+    }*/
     S->C = create_list();
     S->D = create_list();
     S->Min = 0;
@@ -308,7 +308,7 @@ int remove_vertex(Adj_Matrix * M , int selected , Solution * S )
 int remove_neighbors(Adj_Matrix * M , int selected , Solution * S )
 {
     
-    
+    int removed = 0;
  
     if(M[selected].head == NULL)
     {
@@ -321,12 +321,23 @@ int remove_neighbors(Adj_Matrix * M , int selected , Solution * S )
     Vertex_Cell * aux = M[selected].head;
     while(aux->next != NULL)
     {
-        insert_Complement(aux->adj ,S);
-        remove_vertex(M,aux->adj,S);
+        
+        removed = remove_vertex(M,aux->adj,S);
+         if(removed != -1 )
+        {
+            insert_Complement(aux->adj ,S);
+           
+        }
         aux = aux->next;
     }
-    insert_Complement(aux->adj ,S);
-    remove_vertex(M,aux->adj,S);
+    
+    removed = remove_vertex(M,aux->adj,S);
+
+    if(removed != -1 )
+        {
+            insert_Complement(aux->adj ,S);
+            
+        }
     }
     return 1;
 }
@@ -346,8 +357,72 @@ linked_list * RCL(Adj_Matrix * M ,int max_degree , int n ,float alfa )
      }
  }
  return RCL;
-}   
-int Choose_Random_RCL(linked_list * RCL  ,Solution * S)
+}
+int post_RCL(Adj_Matrix * M ,int n , Solution * S )
+{
+
+  for(int i = 0 ; i< n ; i++)
+  {
+      if(M[i].head != NULL)//coloca tudo oque sobrou em uma lista de vertices restantes
+      {
+          printf("\ninserted in S->V :%d\n", i );
+          insert_in_list(S->V , i , M[i].degree);
+      }
+  }
+  return 1;
+} 
+int Choose_Random_post_RCL(Adj_Matrix * M   ,Solution * S)
+{
+     
+    if (S->V->head == NULL)
+       return -1;
+ 
+    srand(time(NULL));
+ 
+    int is_Dominant = 1;
+    int selected = S->V->head->V;
+    L_cell * To_remove ;
+    To_remove = S->V->head;
+    
+    L_cell  * current = S->V->head;
+    
+    for (int n=2; current!=NULL; n++)
+    {
+        
+       
+        if(M[current->V].head == NULL) // adjacencia ja foi retirada  nao pode ser selecionada para ser dominante 
+        {
+            To_remove = current;
+            is_Dominant = 0;
+            current = NULL;
+        }else{//caso nao tenha sido returado podera ser escolhido
+         if (rand() % n == 0)
+        {
+           selected = current->V;
+           To_remove = current;
+           
+          //printf("\nto removed : %d\n",To_remove->V + 1);
+        }
+        current = current->next;
+        }
+    }
+    
+    //printf("\nRandomly selected key is %d\n", selected+1);
+    
+    remove_Cell_list(S->V,To_remove);
+    if(is_Dominant == 1)
+    {
+        insert_Dominant(selected , S);//saiu do for como escolhido e nao porque a adjacencia ja foi removido
+        S->Min ++;
+        print_list(S->V);
+        return selected;
+    }else{//nenhuma adjacencia foi selecionada 
+        print_list(S->V);
+        return -1;
+    }
+    return -1;
+}  
+int Choose_Random_RCL(Adj_Matrix * M ,linked_list * RCL  ,Solution * S)
 {
     
     if (RCL->head == NULL)
@@ -355,6 +430,7 @@ int Choose_Random_RCL(linked_list * RCL  ,Solution * S)
  
     srand(time(NULL));
  
+    int is_Dominant = 1;
     int selected = RCL->head->V;
     L_cell * To_remove ;
     To_remove = RCL->head;
@@ -364,22 +440,38 @@ int Choose_Random_RCL(linked_list * RCL  ,Solution * S)
     for (int n=2; current!=NULL; n++)
     {
         
-        if (rand() % n == 0)
+       
+        if(M[current->V].head == NULL) // adjacencia ja foi retirada  nao pode ser selecionada para ser dominante 
+        {
+            To_remove = current;
+            is_Dominant = 0;
+            current = NULL;
+        }else{//caso nao tenha sido returado podera ser escolhido
+         if (rand() % n == 0)
         {
            selected = current->V;
            To_remove = current;
+           
           //printf("\nto removed : %d\n",To_remove->V + 1);
         }
-           
         current = current->next;
-
+        }
     }
     
     //printf("\nRandomly selected key is %d\n", selected+1);
     
     remove_Cell_list(RCL,To_remove);
-    print_list(RCL);
-    return selected;
+    if(is_Dominant == 1)
+    {
+        insert_Dominant(selected , S);//saiu do for como escolhido e nao porque a adjacencia ja foi removida
+        S->Min ++;
+        print_list(RCL);
+        return selected;
+    }else{//nenhuma adjacencia foi selecionada 
+        print_list(RCL);
+        return -1;
+    }
+    return -1;
 }
 
 Solution * GRASP_construction(linked_list * RCL ,Adj_Matrix * M , int n )
@@ -390,15 +482,32 @@ Solution * GRASP_construction(linked_list * RCL ,Adj_Matrix * M , int n )
       int selected_vertex;
       while(RCL->head != NULL)
       {
-      selected_vertex = Choose_Random_RCL(RCL ,S);
-      if(M[selected_vertex].head != NULL)
+      selected_vertex = Choose_Random_RCL( M ,RCL ,S);
+      if(selected_vertex != -1)// ja foi removido
       {
-          insert_Dominant(selected_vertex,S);
+          remove_neighbors(M, selected_vertex ,S);
+          remove_vertex(M, selected_vertex ,S);
       }
-      remove_neighbors(M, selected_vertex ,S);
-      remove_vertex(M, selected_vertex ,S);
       }
+      post_RCL(M,n,S);
+      return S;
+
+}
+Solution * GRASP_post_construction(Adj_Matrix * M , int n , Solution * S)
+{
       
+      
+ 
+      int selected_vertex;
+      while(S->V->head != NULL)
+      {
+      selected_vertex = Choose_Random_post_RCL( M  ,S);
+      if(selected_vertex != -1)// ja foi removido
+      {
+          remove_neighbors(M, selected_vertex ,S);
+          remove_vertex(M, selected_vertex ,S);
+      }
+      }
       return S;
 
 }
