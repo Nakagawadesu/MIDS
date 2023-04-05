@@ -86,21 +86,21 @@ int remove_Cell_list(linked_list * L, L_cell * current )
     
    if(L->head->V == L->foot->V)
    {    
-       printf("\nremoved last : %d\n",current->V + 1);
+      // printf("\nremoved last : %d\n",current->V + 1);
        L->head = NULL;
    }else{
        if(current->V == L->head->V ){
-        printf("\nremoved head : %d\n",current->V + 1);
+       // printf("\nremoved head : %d\n",current->V + 1);
         L->head = L->head->next;
         free(current);
     }
     else if(current->V == L->foot->V){
-        printf("\nremoved foot : %d\n",current->V + 1);
+      //  printf("\nremoved foot : %d\n",current->V + 1);
         L->foot = L->foot->previus;
         L->foot->next = NULL;
         free(current);
     }else{
-        printf("\nremoved mid : %d\n",current->V + 1);
+      //  printf("\nremoved mid : %d\n",current->V + 1);
     L_cell * prev = current->previus;
     L_cell * next = current->next;
     next->previus = current->previus;
@@ -202,7 +202,61 @@ if(file == NULL)
    return Matrix;
 
 }
+Adj_Matrix * Replicate(Adj_Matrix * M, int n)
+{
+    Adj_Matrix * Matrix = (Adj_Matrix*)malloc(n * sizeof( Adj_Matrix));
+    int count;
+    Vertex_Cell * aux = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));
+    for(int i = 0 ; i < n  ; i++)
+   {
+       Vertex_Cell * previus = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));
+       count = 0 ;
+       if (M[i].head == NULL)
+       {
 
+       }
+       else{
+           Matrix[i].degree = M[i].degree;
+            aux = M[i].head;
+           
+           while(aux->next != NULL)
+           {
+               if(count == 0 )
+               {
+                Vertex_Cell * new = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));
+                new->adj = aux->adj;
+                previus = new;
+                Matrix[i].head = new;
+                aux = aux->next;
+                count ++;
+               }
+               else{
+                Vertex_Cell * new = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));
+                new->adj = aux->adj;
+                previus->next = new;
+                previus = new;
+                aux = aux->next;
+               }
+               
+           }
+           if(count == 0)
+           {
+            Vertex_Cell * new = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));
+                new->adj = aux->adj;
+                previus = new;
+                Matrix[i].head = new;
+           }
+           else{
+            Vertex_Cell * new = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));
+            new->adj = aux->adj;
+            previus->next = new;
+            new->next = NULL;
+           }
+            
+       }
+   }
+    return Matrix;
+}
 int  Number_of_adjacency(FILE * File)
 {
 FILE * file = fopen(File,"r");
@@ -238,7 +292,7 @@ int print_matrix(Adj_Matrix * Matrix, int N_vertex)
         {
         if(Matrix[i].head == NULL)
           {
-              printf("%d : NULL",i + 1);
+              printf("%d : NULL \n",i + 1);
             
           }
           else{
@@ -274,6 +328,7 @@ Solution * create_solution(Adj_Matrix * M , int n)
 }
 void * insert_Complement(int n , Solution* S)
 {
+    print_list(S->C);
    insert_in_list(S->C,n,0);
 }
 void * insert_Dominant(int n , Solution* S)
@@ -293,12 +348,12 @@ int remove_vertex(Adj_Matrix * M , int selected , Solution * S )
     
     if(M[selected].head == NULL)
     {
-        printf("\nalready removed : %d \n",selected+1);
+        //printf("\nalready removed : %d \n",selected+1);
         //printf("\nremoving vertex %d \n",selected);
        return -1;
     }
     else{
-        printf("\nremoving vertex : %d \n",selected+1);
+       // printf("\nremoving vertex : %d \n",selected+1);
        // printf("\nremoving vertex %d \n",selected);
     M[selected].head = NULL;
     }
@@ -312,11 +367,11 @@ int remove_neighbors(Adj_Matrix * M , int selected , Solution * S )
  
     if(M[selected].head == NULL)
     {
-        printf("\nalready removed: %d \n",selected+1);
+       // printf("\nalready removed: %d \n",selected+1);
        return -1;
     }
     else{
-        printf("\nremoving neighboor: %d \n",selected+1);
+        //printf("\nremoving neighboor: %d \n",selected+1);
         
     Vertex_Cell * aux = M[selected].head;
     while(aux->next != NULL)
@@ -342,173 +397,4 @@ int remove_neighbors(Adj_Matrix * M , int selected , Solution * S )
     return 1;
 }
 
-// GRASP 
-
-linked_list * RCL(Adj_Matrix * M ,int max_degree , int n ,float alfa )
-{
- linked_list * RCL = create_list();
- RCL->Min_degree = max_degree * alfa;
- printf("alfa : %f",alfa);
- for(int i = 0 ; i< n ;i++)
- {
-     if(M[i].degree > RCL->Min_degree )
-     {
-         insert_in_list(RCL,i,M[i].degree);
-     }
- }
- return RCL;
-}
-int post_RCL(Adj_Matrix * M ,int n , Solution * S )
-{
-
-  for(int i = 0 ; i< n ; i++)
-  {
-      if(M[i].head != NULL)//coloca tudo oque sobrou em uma lista de vertices restantes
-      {
-          printf("\ninserted in S->V :%d\n", i );
-          insert_in_list(S->V , i , M[i].degree);
-      }
-  }
-  return 1;
-} 
-int Choose_Random_post_RCL(Adj_Matrix * M   ,Solution * S)
-{
-     
-    if (S->V->head == NULL)
-       return -1;
- 
-    srand(time(NULL));
- 
-    int is_Dominant = 1;
-    int selected = S->V->head->V;
-    L_cell * To_remove ;
-    To_remove = S->V->head;
-    
-    L_cell  * current = S->V->head;
-    
-    for (int n=2; current!=NULL; n++)
-    {
-        
-       
-        if(M[current->V].head == NULL) // adjacencia ja foi retirada  nao pode ser selecionada para ser dominante 
-        {
-            To_remove = current;
-            is_Dominant = 0;
-            current = NULL;
-        }else{//caso nao tenha sido returado podera ser escolhido
-         if (rand() % n == 0)
-        {
-           selected = current->V;
-           To_remove = current;
-           
-          //printf("\nto removed : %d\n",To_remove->V + 1);
-        }
-        current = current->next;
-        }
-    }
-    
-    //printf("\nRandomly selected key is %d\n", selected+1);
-    
-    remove_Cell_list(S->V,To_remove);
-    if(is_Dominant == 1)
-    {
-        insert_Dominant(selected , S);//saiu do for como escolhido e nao porque a adjacencia ja foi removido
-        S->Min ++;
-        print_list(S->V);
-        return selected;
-    }else{//nenhuma adjacencia foi selecionada 
-        print_list(S->V);
-        return -1;
-    }
-    return -1;
-}  
-int Choose_Random_RCL(Adj_Matrix * M ,linked_list * RCL  ,Solution * S)
-{
-    
-    if (RCL->head == NULL)
-       return -1;
- 
-    srand(time(NULL));
- 
-    int is_Dominant = 1;
-    int selected = RCL->head->V;
-    L_cell * To_remove ;
-    To_remove = RCL->head;
-    
-    L_cell  * current = RCL->head;
-    
-    for (int n=2; current!=NULL; n++)
-    {
-        
-       
-        if(M[current->V].head == NULL) // adjacencia ja foi retirada  nao pode ser selecionada para ser dominante 
-        {
-            To_remove = current;
-            is_Dominant = 0;
-            current = NULL;
-        }else{//caso nao tenha sido returado podera ser escolhido
-         if (rand() % n == 0)
-        {
-           selected = current->V;
-           To_remove = current;
-           
-          //printf("\nto removed : %d\n",To_remove->V + 1);
-        }
-        current = current->next;
-        }
-    }
-    
-    //printf("\nRandomly selected key is %d\n", selected+1);
-    
-    remove_Cell_list(RCL,To_remove);
-    if(is_Dominant == 1)
-    {
-        insert_Dominant(selected , S);//saiu do for como escolhido e nao porque a adjacencia ja foi removida
-        S->Min ++;
-        print_list(RCL);
-        return selected;
-    }else{//nenhuma adjacencia foi selecionada 
-        print_list(RCL);
-        return -1;
-    }
-    return -1;
-}
-
-Solution * GRASP_construction(linked_list * RCL ,Adj_Matrix * M , int n )
-{
-      Solution * S  = create_solution(M , n);
-      
- 
-      int selected_vertex;
-      while(RCL->head != NULL)
-      {
-      selected_vertex = Choose_Random_RCL( M ,RCL ,S);
-      if(selected_vertex != -1)// ja foi removido
-      {
-          remove_neighbors(M, selected_vertex ,S);
-          remove_vertex(M, selected_vertex ,S);
-      }
-      }
-      post_RCL(M,n,S);
-      return S;
-
-}
-Solution * GRASP_post_construction(Adj_Matrix * M , int n , Solution * S)
-{
-      
-      
- 
-      int selected_vertex;
-      while(S->V->head != NULL)
-      {
-      selected_vertex = Choose_Random_post_RCL( M  ,S);
-      if(selected_vertex != -1)// ja foi removido
-      {
-          remove_neighbors(M, selected_vertex ,S);
-          remove_vertex(M, selected_vertex ,S);
-      }
-      }
-      return S;
-
-}
 #endif // GRAPH_H
