@@ -29,6 +29,7 @@
 - [x] Imprimir matriz de adjacencia
 - [x] Ordenar por grau de vertice
 - [ ] TimSort
-- [ ] GRASP
-- [ ] ACO(BUSCA LOCAL)
+- [x] GRASP
+- [ ] estatísticas para os grafos do BHOSLIB
+- [ ] ACO(BUSCA LOCAL) 
      
