@@ -7,7 +7,7 @@
 #include "graph.h"
 
 
-linked_list * RCL(Adj_Matrix * M ,int max_degree , int n ,float alfa )
+linked_list * create_RCL(Adj_Matrix * M ,int max_degree , int n ,float alfa )
 {
  linked_list * RCL = create_list();
  RCL->Min_degree = max_degree * alfa;
@@ -137,10 +137,10 @@ int Choose_Random_RCL(Adj_Matrix * M ,linked_list * RCL  ,Solution * S)
     return -1;
 }
 
-Solution * GRASP_construction(linked_list * RCL ,Adj_Matrix * M , int n )
+Solution * GRASP_construction(Adj_Matrix * M , int n  , int max_deg , float alfa)
 {
       Solution * S  = create_solution(M , n);
-      
+      linked_list * RCL  = create_RCL(M,max_deg,n,alfa);
  
       int selected_vertex;
       while(RCL->head != NULL)
@@ -159,7 +159,6 @@ Solution * GRASP_construction(linked_list * RCL ,Adj_Matrix * M , int n )
 Solution * GRASP_post_construction(Adj_Matrix * M , Solution * S , int n )
 {
       
-      
  
       int selected_vertex;
       while(S->V->head != NULL)
@@ -174,34 +173,20 @@ Solution * GRASP_post_construction(Adj_Matrix * M , Solution * S , int n )
       return S;
 
 }
-Solution * Best_Solution(Adj_Matrix * M  , int n , int Best , Solution * Best_S , int stop ,linked_list * RCL)
+Solution * GRASP(Adj_Matrix * M , int n ,int max_deg ,double * elapsed)
 {
-  
-    if(Best <= stop ){
-        printf("\n FOUND \n");
-        return Best_S;
-    }
-    else{
-        Adj_Matrix * M_Replica  = Replicate(M,n);
+    clock_t begin = clock();
+    float a = 0.125;
+    float x = (float)rand()/(float)(RAND_MAX/a);
+    float alfa = 0.3 /*+ x*/;
 
-        Solution * S = GRASP_construction(RCL , M_Replica , n);
-        S = GRASP_post_construction(M_Replica  , S , n );
+    Solution * S = GRASP_construction( M , n,max_deg ,alfa);
+    S = GRASP_post_construction(M  , S , n );
+    return S;
+    clock_t end = clock();
 
-        if(S->Min < Best)
-        {
-            printf("\nNot Found , Current minimun : %d \n",Best);
-            print_solution(S);
-            return Best_Solution(M , n, S->Min , S , stop , RCL);
-        }
-        else{
-            
-            printf("\nNot Found , Current minimun : %d \n",Best);
-            print_solution(S);
-            return Best_Solution(M , n, Best , S , stop , RCL);
-        }
-        
-        
-    }
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    *elapsed = time_spent;
+    printf("\nExecuted in : %f s\n", *elapsed);
 }
-
 #endif // GRASP_H

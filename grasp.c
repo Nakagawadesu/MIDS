@@ -4,48 +4,103 @@
 #include <time.h>
 #include "graph.h"
 #include "grasp.h"
-#include "sorting.h"
+#include "utils.h"
 int main()
 {
     
  clock_t begin = clock();
 
+ //char* file_name = "test_matrix";
+ 
+ //frb30-15
 
- char* file_name = "text_matrix";
- //char* file_name = "text_matrix";
- //char* file_name = "frb100-40.txt";
- int max_deg;
- int iteration_counter = 0;
- float alfa = 0.7;
- Adj_Matrix * Matrix = Initialize_Matrix(file_name, &max_deg);
- 
- int N_adjs = Number_of_adjacency(file_name);
- int N_vertex = Number_of_vertex(file_name);
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb30-15-1.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb30-15-2.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb30-15-3.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb30-15-4.clq";
+char* file_name = "/home/matheus/BHOSLIB_ascii/frb30-15-5.clq";
 
+ //frb35-17
+
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb35-17-1.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb35-17-2.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb35-17-3.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb35-17-4.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb35-17-5.clq";
+
+
+ //frb40-19
+
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb40-19-1.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb40-19-2.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb40-19-3.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb40-19-4.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb40-19-5.clq";
+
+
+ //frb45-21
+
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb45-21-1.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb45-21-2.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb45-21-3.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb45-21-4.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb45-21-5.clq";
+
+
+//frb50-23
+
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb50-23-1.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb50-23-2.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb50-23-3.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb50-23-4.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb50-23-5.clq";
+
+
+//frb53-24
+
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb53-24-1.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb53-24-2.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb53-24-3.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb53-24-4.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb53-24-5.clq";
+
+
+//frb59-26
+
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb59-26-1.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb59-26-2.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb59-26-3.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb59-26-4.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb59-26-5.clq";
+
+
+//frb100-40
+
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb100-40.clq";
+
+
+ int max_deg,N_vertex ;
+ double elapsed =0 ;
  
- printf("Unsorted Matrix\n");
- 
+ //char* file_name = "test_matrix";
+
+ Adj_Matrix * Matrix = Initialize_Matrix_BHOSLIB(file_name, &max_deg, &N_vertex);
+
+
+ //TEST AND DEBUG
+ /*
+ printf("Matrix\n");
  print_matrix(Matrix,N_vertex);
- /*printf("\n");
-Adj_Matrix * M = Replicate(Matrix, N_vertex);
-
- print_matrix(M,N_vertex);
- */
-
-linked_list * rcl = RCL(Matrix , max_deg ,N_vertex , alfa);
-Solution * S = Best_Solution(Matrix , N_vertex , N_vertex , create_solution(Matrix,N_vertex) , 3 , rcl);
-print_solution(S);
-printf("\nMin Found :%d , Searched : %d\n",S->Min, iteration_counter);
-
-
-/*
-linked_list * rcl = RCL(Matrix , max_deg,N_vertex , alfa);
-print_list(rcl);
-Solution * S = GRASP_construction(rcl , Matrix , N_vertex);
-S = GRASP_post_construction(Matrix  , S , N_vertex );
-print_solution(S);
-printf("\nMin : %d\n", S->Min);
+ Solution * S = GRASP(Matrix,N_vertex,max_deg);
+ print_solution(S);
+ printf("\nMin Found :%d \n",S->Min);
 */
+
+Solution * S = GRASP(Matrix,N_vertex,max_deg , &elapsed);
+
+ char* file_results = "test_results";
+write_results(file_results,elapsed,S->Min);
+printf("\nMin Found :%d \n",S->Min);
 
 clock_t end = clock();
 double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;

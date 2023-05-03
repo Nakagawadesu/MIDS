@@ -137,10 +137,10 @@ int Order_list();
 
 // GRAPH UTILS >>
 
-Adj_Matrix * Initialize_Matrix(char * File , int * max_degree)
+Adj_Matrix * Initialize_Matrix_BHOSLIB(char * File , int * max_degree , int * N)
 {
     *max_degree = 0;
-    int N_rows,N_cols,N_ones;
+    int N_vertex,N_adj;
     int vertex,adj;
 //abre a strnam para o arquivo desejado    
 FILE * file = fopen(File,"r");
@@ -156,12 +156,12 @@ if(file == NULL)
    
    //ignorando o header e pegando a segunda linha
 
-   fscanf(file ,"%*s %*s %*s %*s %*s %d %d %d ",&N_rows ,&N_cols, &N_ones);
+   fscanf(file ,"%*s %*s  %d %d ",&N_vertex, &N_adj);
    
-
+   *N = N_vertex; 
   // printf("%d %d %d\n",N_rows ,N_cols,N_ones);
 
-   Adj_Matrix * Matrix = (Adj_Matrix*)malloc(N_rows * sizeof( Adj_Matrix));
+   Adj_Matrix * Matrix = (Adj_Matrix*)malloc(N_vertex * sizeof( Adj_Matrix));
    /*
    for(int i = 0 ; i < N_rows; i++ )
    {
@@ -172,11 +172,11 @@ if(file == NULL)
    Vertex_Cell * previus = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));
   
   
-   for(int i =0 ; i < N_ones + 1 ; i++)
+   for(int i =0 ; i < N_adj + 1 ; i++)
    {
        Vertex_Cell * aux = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));
      
-       fscanf(file,"%d %d",&adj,&vertex);
+       fscanf(file,"%*s %d %d",&adj,&vertex);
        aux->adj = adj-1;
      // printf("%d %d ", aux->adj , vertex);
       //printf("\n");
@@ -257,31 +257,6 @@ Adj_Matrix * Replicate(Adj_Matrix * M, int n)
    }
     return Matrix;
 }
-int  Number_of_adjacency(FILE * File)
-{
-FILE * file = fopen(File,"r");
-
-int n;
-
-fscanf(file ,"%*s %*s %*s %*s %*s %*d %*d %*d", &n);
-
-//printf("%d",n);
-fclose(file);
-    return n;
-}
-
-int  Number_of_vertex(FILE * File)
-{
-FILE * file = fopen(File,"r");
-
-int n;
-
-fscanf(file ,"%*s %*s %*s %*s %*s %d", &n);
-
-//printf("%d",n);
-fclose(file);
-    return n;
-}
 
 
 int print_matrix(Adj_Matrix * Matrix, int N_vertex)
@@ -328,7 +303,7 @@ Solution * create_solution(Adj_Matrix * M , int n)
 }
 void * insert_Complement(int n , Solution* S)
 {
-    print_list(S->C);
+   
    insert_in_list(S->C,n,0);
 }
 void * insert_Dominant(int n , Solution* S)
