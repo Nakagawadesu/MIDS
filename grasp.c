@@ -14,11 +14,11 @@ int main()
  
  //frb30-15
 
-//char* file_name = "/home/matheus/BHOSLIB_ascii/frb30-15-1.clq";
+char* file_name = "/home/matheus/BHOSLIB_ascii/frb30-15-1.clq";
 //char* file_name = "/home/matheus/BHOSLIB_ascii/frb30-15-2.clq";
 //char* file_name = "/home/matheus/BHOSLIB_ascii/frb30-15-3.clq";
 //char* file_name = "/home/matheus/BHOSLIB_ascii/frb30-15-4.clq";
-char* file_name = "/home/matheus/BHOSLIB_ascii/frb30-15-5.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb30-15-5.clq";
 
  //frb35-17
 
@@ -99,11 +99,12 @@ char* file_name = "/home/matheus/BHOSLIB_ascii/frb30-15-5.clq";
 Solution * S = GRASP(Matrix,N_vertex,max_deg , &elapsed);
 
  char* file_results = "test_results";
-write_results(file_results,elapsed,S->Min);
+ 
+write_results(file_results , elapsed ,  S->Min);
 printf("\nMin Found :%d \n",S->Min);
 
 clock_t end = clock();
 double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-printf("\nExecuted in : %f s\n", time_spent);
+//printf("\nExecuted in : %f s\n", time_spent);
 return 0;
 }

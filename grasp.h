@@ -176,17 +176,20 @@ Solution * GRASP_post_construction(Adj_Matrix * M , Solution * S , int n )
 Solution * GRASP(Adj_Matrix * M , int n ,int max_deg ,double * elapsed)
 {
     clock_t begin = clock();
+    /*
     float a = 0.125;
     float x = (float)rand()/(float)(RAND_MAX/a);
-    float alfa = 0.3 /*+ x*/;
+    */
+    float alfa = 0.4 /*+ x*/;
 
     Solution * S = GRASP_construction( M , n,max_deg ,alfa);
     S = GRASP_post_construction(M  , S , n );
-    return S;
+    
     clock_t end = clock();
 
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
     *elapsed = time_spent;
     printf("\nExecuted in : %f s\n", *elapsed);
+    return S;
 }
 #endif // GRASP_H
