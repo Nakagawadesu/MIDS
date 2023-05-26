@@ -30,6 +30,6 @@
 - [x] Ordenar por grau de vertice
 - [ ] TimSort
 - [x] GRASP
-- [ ] estatísticas para os grafos do BHOSLIB
+- [x] estatísticas para os grafos do BHOSLIB
 - [ ] ACO(BUSCA LOCAL) 
      
