@@ -484,6 +484,8 @@ int remove_neighbors(Adj_Matrix * M , int selected , Solution * S )
     Vertex_Cell * aux = M[selected].head;
     while(aux->next != NULL)
     {
+
+        reduce_neighbors_degree(M,aux->adj);
         
         removed = remove_vertex(M,aux->adj,S);
          if(removed != -1 )
@@ -503,6 +505,31 @@ int remove_neighbors(Adj_Matrix * M , int selected , Solution * S )
         }
     }
     return 1;
+}
+int reduce_neighbors_degree(Adj_Matrix * M , int selected )
+{
+
+    
+    int removed = 0;
+ 
+    if(M[selected].head == NULL)
+    {
+       return -1;
+    }
+    else{
+ 
+    Vertex_Cell * aux = M[selected].head;
+    while(aux->next != NULL)
+    {
+        
+        M[aux->adj].degree--;
+        aux = aux->next;
+    }
+    
+    M[aux->adj].degree--;
+    return 1;
+
+    }
 }
 
 #endif // GRAPH_H

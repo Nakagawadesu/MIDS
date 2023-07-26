@@ -6,15 +6,16 @@
 #include <time.h>
 #include "graph.h"
 
-void Find_degree_stats(Adj_Matrix * M , int N, int * max_deg , int * min_deg , int * avg)
+void Find_degree_stats(Adj_Matrix * M , int N, int * max_deg , int * min_deg , float * avg ,int * V_left)
 {
-
     *max_deg = 0 ;
     *min_deg = __INT32_MAX__;
-    int sum = 0;
+    int sum = 0, vertex_count = 0;
     for(int i = 0 ; i <  N ; i++)
     {
-        if(M[i].degree > *max_deg)
+        if(M[i].head != NULL)
+        {
+            if(M[i].degree > *max_deg)
         {
             *max_deg = M[i].degree;
         }
@@ -22,12 +23,22 @@ void Find_degree_stats(Adj_Matrix * M , int N, int * max_deg , int * min_deg , i
         {
             *min_deg = M[i].degree;
         }
+        vertex_count ++;
         sum += M[i].degree;
+        }
+        
+        
     }
-    *avg = ceil(sum/N);
-    
+    *avg = sum/vertex_count;
+    *V_left = vertex_count;
 }
-
+void Recalculate_alfa (Adj_Matrix * M , int N , int * max_deg , int * min_deg , float * avg , float *alfa , int * V_left)
+{
+   
+    Find_degree_stats(M, N, max_deg, min_deg, avg, V_left);
+    
+    *alfa = ( *avg / *max_deg ) + (1 - ( *avg / *max_deg ))/2 ; 
+}
 linked_list * create_RCL(Adj_Matrix * M ,int max_degree , int n ,float alfa )
 {
  linked_list * RCL = create_list();
@@ -158,9 +169,9 @@ int Choose_Random_RCL(Adj_Matrix * M ,linked_list * RCL  ,Solution * S)
     return -1;
 }
 
-Solution * GRASP_construction(Adj_Matrix * M , int n  , int max_deg , float alfa)
+Solution * GRASP_construction(Adj_Matrix * M , int n  , Solution * S , int max_deg , float alfa )
 {
-      Solution * S  = create_solution(M , n);
+       
       linked_list * RCL  = create_RCL(M,max_deg,n,alfa);
  
       int selected_vertex;
@@ -173,7 +184,7 @@ Solution * GRASP_construction(Adj_Matrix * M , int n  , int max_deg , float alfa
           remove_vertex(M, selected_vertex ,S);
       }
       }
-      post_RCL(M,n,S);
+     
       return S;
 
 }
@@ -194,17 +205,31 @@ Solution * GRASP_post_construction(Adj_Matrix * M , Solution * S , int n )
       return S;
 
 }
-Solution * GRASP(Adj_Matrix * M , int n ,int max_deg ,double * elapsed)
+Solution * GRASP(Adj_Matrix * M , int n ,double * elapsed)
 {
     clock_t begin = clock();
-    /*
-    float a = 0.125;
-    float x = (float)rand()/(float)(RAND_MAX/a);
-    */
-    float alfa = 0.7/*+ x*/;
+   
+     Solution * S  = create_solution(M , n);
 
-    Solution * S = GRASP_construction( M , n,max_deg ,alfa);
-    S = GRASP_post_construction(M  , S , n );
+    float alfa ,avg ;
+    int max_deg = 0, min_deg =4000 , V_left = n; 
+
+    Recalculate_alfa(M , n, &max_deg, &min_deg, &avg, &alfa , &V_left);
+
+    printf("\nmax deg : %d || min deg : %d || avg deg : %f || alfa: %f || V_left: %d\n", max_deg, min_deg, avg,alfa,V_left);
+
+    while( alfa >= 0.51  && max_deg >= 2  && avg > 2 )
+    {
+        
+
+        S = GRASP_construction( M , n, S , max_deg , alfa);
+        
+        Recalculate_alfa(M , n, &max_deg, &min_deg, &avg, &alfa ,&V_left);
+        printf("\nmax deg : %d || min deg : %d || avg deg : %f || alfa: %f|| V_left: %d\n", max_deg, min_deg, avg,alfa,V_left);
+    }
+    post_RCL(M , n , S );
+    print_list(S->V);
+    GRASP_post_construction(M , S ,n);
     
     clock_t end = clock();
 

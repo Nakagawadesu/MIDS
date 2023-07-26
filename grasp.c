@@ -63,8 +63,7 @@ int main()
 
 //frb59-26
 
-//char* file_name = "/home/matheus/BHOSLIB_ascii/frb59-26-1.clq";
-//char* file_name = "/home/matheus/BHOSLIB_ascii/frb59-26-2.clq";
+//char* file_name = "/home/matheus/BHOSLIB_ascii/frb59-26vg .clq";
 //char* file_name = "/home/matheus/BHOSLIB_ascii/frb59-26-3.clq";
 //char* file_name = "/home/matheus/BHOSLIB_ascii/frb59-26-4.clq";
 //char* file_name = "/home/matheus/BHOSLIB_ascii/frb59-26-5.clq";
@@ -90,7 +89,7 @@ char graph_name[30] = "frb30-15-1.clq";
 //char* file_name = "test_matrix";
 //scanf("%s" , &graph_name);
 
- int min_deg = 4000, max_deg = 0 ,avg_deg , N_vertex ;
+ int N_vertex ;
  double elapsed = 0 ;
 
 
@@ -101,26 +100,23 @@ strcat(dir,graph_name);
 //Adj_Matrix * Matrix = Initialize_Matrix_BHOSLIB_old(dir,&N_vertex);
 Adj_Matrix * Matrix = Initialize_Matrix_Dimacs(dir,&N_vertex);
 
+/*
 print_matrix_degrees(Matrix,N_vertex);
-//print_matrix(Matrix,N_vertex);
- Find_degree_stats(Matrix , N_vertex, &max_deg , &min_deg , &avg_deg);
 
-printf("\nmax deg : %d || min deg : %d || avg deg : %d\n",max_deg,min_deg,avg_deg   );
+Find_degree_stats(Matrix , N_vertex, &max_deg , &min_deg , &avg_deg);
+Recalculate_alfa(Matrix, N_vertex ,&max_deg , &min_deg , &avg_deg , &alfa);
+printf("\nmax deg : %d || min deg : %d || avg deg : %f || alfa: %f\n", max_deg, min_deg, avg_deg,alfa);
  
-
-
- //TEST AND DEBUG
- /*
- printf("Matrix\n");
- print_matrix(Matrix,N_vertex);
- Solution * S = GRASP(Matrix,N_vertex,max_deg , &elapsed);;
- print_solution(S);
- printf("\nMin Found :%d \n",S->Min);
 */
 
-//Adj_Matrix * Replica = Replicate(Matrix,N_vertex);
 
-Solution * S = GRASP(Matrix,N_vertex,max_deg , &elapsed);
+Adj_Matrix * Replica = Replicate(Matrix,N_vertex);
+
+//Solution * S = GRASP(Matrix,N_vertex,max_deg , &elapsed);
+
+Solution * S = GRASP(Matrix , N_vertex , &elapsed );
+
+
 printf("\nMin Found :%d \n",S->Min);
  print_solution(S);
 
