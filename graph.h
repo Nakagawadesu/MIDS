@@ -5,14 +5,13 @@
 #include <stdlib.h>
 
 
-int Line_max = 256;
+int Line_max = 1024;
 
 
 // DATA STRUCTURES >>
 typedef struct Adj_Matrix{
 
     struct Vertex_Cell * head;
-   // int vertex;
     int degree;
     
 }Adj_Matrix;
@@ -81,6 +80,7 @@ int insert_in_list(linked_list * L, int V, int D)
     return 1;
 }
 
+
 int remove_Cell_list(linked_list * L, L_cell * current )
 {
     
@@ -108,11 +108,10 @@ int remove_Cell_list(linked_list * L, L_cell * current )
     free(current);
     }
     
-   }
-
-    
+    }
     return 1;
 }
+
 
 void print_list(linked_list * L)
 {
@@ -132,17 +131,117 @@ void print_list(linked_list * L)
     
 }
 
-int Order_list();
-
 
 // GRAPH UTILS >>
-
-Adj_Matrix * Initialize_Matrix_BHOSLIB(char * File , int * max_degree , int * N)
+void insert_adj(Adj_Matrix * M ,int V , int adj )
 {
-    *max_degree = 0;
+    if(M[V].head == NULL)
+    {
+
+     Vertex_Cell * new_cell = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));   
+
+     new_cell->adj = adj;
+
+     M[V].head = new_cell;
+     M[V].degree++;   
+    
+    }
+    else{
+     Vertex_Cell * new_cell = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));   
+
+     Vertex_Cell * aux = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));
+     aux = M[V].head;
+
+     new_cell->adj = adj;
+     while(aux->next != NULL)
+     {
+        aux = aux->next;
+     }
+    M[V].degree++;   
+    aux->next = new_cell;
+     
+    }
+
+    if(M[adj].head==NULL)
+    {
+     Vertex_Cell * new_cell = (Vertex_Cell*)malloc(sizeof(Vertex_Cell)); 
+       
+     new_cell->adj = V;
+
+     M[adj].head = new_cell;
+     M[adj].degree++; 
+       
+    }
+    else{
+      Vertex_Cell * new_cell = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));   
+
+     Vertex_Cell * aux = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));
+     aux = M[adj].head;
+
+     new_cell->adj = V;
+
+     while(aux->next != NULL)
+     {
+        aux = aux->next;
+     }
+     aux->next = new_cell;
+     M[adj].degree++;   
+      
+    }
+}
+
+Adj_Matrix * Initialize_Matrix_Dimacs(char * File , int * N)
+{
     int N_vertex,N_adj;
     int vertex,adj;
-//abre a strnam para o arquivo desejado    
+   
+FILE * file = fopen(File,"r");
+
+    if(file == NULL)
+    {
+        printf("NO SUCH FILE\n");
+        return 0;
+    }
+
+
+   char * line_buffer = (char*)malloc( sizeof(char) * Line_max);
+   
+   //ignorando o header e pegando a segunda linha
+
+   fscanf(file ,"%d %d ",&N_adj,&N_vertex);
+   *N = N_vertex; 
+
+
+
+   Adj_Matrix * Matrix = (Adj_Matrix*)malloc(N_vertex * sizeof( Adj_Matrix));
+   int count = 0;
+    while(fgets(line_buffer,Line_max,file))
+    {
+        if(count > 0)
+        {
+        Vertex_Cell * aux = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));
+     
+        sscanf(line_buffer,"%d %d",&adj,&vertex);
+        /*
+        if(count <10)
+        {
+            printf("line buffer: %s " , line_buffer);
+        }
+        */
+        
+        insert_adj(Matrix , vertex-1 , adj-1 );
+        }        
+        count ++;
+      
+    }
+    return Matrix;
+}
+Adj_Matrix * Initialize_Matrix_BHOSLIB_old(char * File , int * N)
+{
+    
+    int N_vertex,N_adj;
+    int vertex,adj;
+   
 FILE * file = fopen(File,"r");
 
 if(file == NULL)
@@ -159,49 +258,64 @@ if(file == NULL)
    fscanf(file ,"%*s %*s  %d %d ",&N_vertex, &N_adj);
    
    *N = N_vertex; 
-  // printf("%d %d %d\n",N_rows ,N_cols,N_ones);
+
 
    Adj_Matrix * Matrix = (Adj_Matrix*)malloc(N_vertex * sizeof( Adj_Matrix));
-   /*
-   for(int i = 0 ; i < N_rows; i++ )
-   {
-       Matrix[i].vertex = i; //cada cabeca tera um numero correspondendo ao vertice
-       //para possibilitar a ordenacao por grau no vertice
-   }
-*/
-   Vertex_Cell * previus = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));
-  
-  
-   for(int i =0 ; i < N_adj + 1 ; i++)
+   
+   for(int i =0 ; i < N_adj ; i++)
    {
        Vertex_Cell * aux = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));
      
-       fscanf(file,"%*s %d %d",&adj,&vertex);
-       aux->adj = adj-1;
-     // printf("%d %d ", aux->adj , vertex);
-      //printf("\n");
-       if(Matrix[vertex - 1].head == NULL)
-       {
-           Matrix[vertex - 1].degree++;
-           Matrix[vertex - 1].head = aux;
-           previus = aux;
-       }
-       else{
-            Matrix[vertex - 1].degree++;
-            previus->next = aux;
-            previus = aux;
-       }
-       
-      if (*max_degree < Matrix[vertex - 1].degree )
-      {
-           *max_degree = Matrix[vertex - 1].degree;
-      }
-       
-   }
-   //print_matrix(Row,N_rows,N_cols);
-   return Matrix;
+       fscanf(file,"%*s %d %d",&vertex,&adj);
 
+        insert_adj(Matrix , vertex-1 , adj-1 );
+       
+            
+   
+   }
+    return Matrix;
 }
+Adj_Matrix * Initialize_Matrix_BHOSLIB_new(char * File  , int * N)
+{
+    
+    int N_vertex,N_adj;
+    int vertex,adj;
+//abre a strnam para o arquivo desejado    
+FILE * file = fopen(File,"r");
+
+if(file == NULL)
+    {
+        printf("NO SUCH FILE\n");
+        return 0;
+    }
+
+
+   char * line_buffer = (char*)malloc( sizeof(char) * Line_max);
+   
+   //ignorando o header e pegando a segunda linha
+   fscanf(file ,"%*s %*s  %*s %*s %*s");
+
+   fscanf(file ,"%*d  %d %d ",&N_vertex, &N_adj);
+   
+   *N = N_vertex; 
+
+
+   Adj_Matrix * Matrix = (Adj_Matrix*)malloc(N_vertex * sizeof( Adj_Matrix));
+   
+   for(int i =0 ; i < N_adj ; i++)
+   {
+       Vertex_Cell * aux = (Vertex_Cell*)malloc(sizeof(Vertex_Cell));
+     
+       fscanf(file,"%d %d",&adj,&vertex);
+
+        insert_adj(Matrix , vertex-1 , adj-1 );
+       
+            
+   
+   }
+    return Matrix;
+}
+
 Adj_Matrix * Replicate(Adj_Matrix * M, int n)
 {
     Adj_Matrix * Matrix = (Adj_Matrix*)malloc(n * sizeof( Adj_Matrix));
@@ -258,7 +372,6 @@ Adj_Matrix * Replicate(Adj_Matrix * M, int n)
     return Matrix;
 }
 
-
 int print_matrix(Adj_Matrix * Matrix, int N_vertex)
 {
     Vertex_Cell * aux;
@@ -287,7 +400,27 @@ int print_matrix(Adj_Matrix * Matrix, int N_vertex)
            
         }
 }
-
+int print_matrix_degrees(Adj_Matrix * Matrix, int N_vertex)
+{
+    
+    printf("\n");
+    for (int i =0 ;i< N_vertex;i++)
+        {
+        if(Matrix[i].head == NULL)
+          {
+              printf("%d : NULL \n",i + 1);
+            
+          }
+          else{
+            
+           printf("degree : %d || vertex : %d :", Matrix[i].degree,i+1);
+           
+           printf("\n");
+          }  
+           
+           
+        }
+}
 Solution * create_solution(Adj_Matrix * M , int n)
 {
     Solution * S = (Solution*)malloc(sizeof(Solution));
@@ -351,6 +484,8 @@ int remove_neighbors(Adj_Matrix * M , int selected , Solution * S )
     Vertex_Cell * aux = M[selected].head;
     while(aux->next != NULL)
     {
+
+        reduce_neighbors_degree(M,aux->adj);
         
         removed = remove_vertex(M,aux->adj,S);
          if(removed != -1 )
@@ -370,6 +505,31 @@ int remove_neighbors(Adj_Matrix * M , int selected , Solution * S )
         }
     }
     return 1;
+}
+int reduce_neighbors_degree(Adj_Matrix * M , int selected )
+{
+
+    
+    int removed = 0;
+ 
+    if(M[selected].head == NULL)
+    {
+       return -1;
+    }
+    else{
+ 
+    Vertex_Cell * aux = M[selected].head;
+    while(aux->next != NULL)
+    {
+        
+        M[aux->adj].degree--;
+        aux = aux->next;
+    }
+    
+    M[aux->adj].degree--;
+    return 1;
+
+    }
 }
 
 #endif // GRAPH_H
