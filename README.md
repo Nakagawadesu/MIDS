@@ -23,13 +23,5 @@
 -  frb100-40.txt(matriz de 4000 vertices)
 -  text_matrix(matriz de teste 10 vertices)   
   
-### To do list :heavy_check_mark:
-- [x] Ler arquivo .mtx
-- [x] Inicializar matriz de adjacencia
-- [x] Imprimir matriz de adjacencia
-- [x] Ordenar por grau de vertice
-- [ ] TimSort
-- [x] GRASP
-- [ ] estatísticas para os grafos do BHOSLIB
-- [ ] ACO(BUSCA LOCAL) 
+### Pseudo Code
      
