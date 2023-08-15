@@ -29,15 +29,19 @@ void Find_degree_stats(Adj_Matrix * M , int N, int * max_deg , int * min_deg , f
         
         
     }
-    *avg = sum/vertex_count;
+    if(vertex_count != 0)
+    {   
+        *avg = sum/vertex_count;
+    }
+    
     *V_left = vertex_count;
 }
 void Recalculate_alfa (Adj_Matrix * M , int N , int * max_deg , int * min_deg , float * avg , float *alfa , int * V_left)
 {
    
     Find_degree_stats(M, N, max_deg, min_deg, avg, V_left);
+    *alfa = 0.5 + ((float)rand()/(float)(RAND_MAX)* 0.375);
     
-    *alfa = ( *avg / *max_deg ) + (1 - ( *avg / *max_deg ))/2 ; 
 }
 linked_list * create_RCL(Adj_Matrix * M ,int max_degree , int n ,float alfa )
 {
@@ -71,8 +75,6 @@ int Choose_Random_post_RCL(Adj_Matrix * M   ,Solution * S)
      
     if (S->V->head == NULL)
        return -1;
- 
-    srand(time(NULL));
  
     int is_Dominant = 1;
     int selected = S->V->head->V;
@@ -123,8 +125,7 @@ int Choose_Random_RCL(Adj_Matrix * M ,linked_list * RCL  ,Solution * S)
     if (RCL->head == NULL)
        return -1;
  
-    srand(time(NULL));
- 
+   
     int is_Dominant = 1;
     int selected = RCL->head->V;
     L_cell * To_remove ;
@@ -212,13 +213,13 @@ Solution * GRASP(Adj_Matrix * M , int n ,double * elapsed)
      Solution * S  = create_solution(M , n);
 
     float alfa ,avg ;
-    int max_deg = 0, min_deg =4000 , V_left = n; 
+    int max_deg = 0, min_deg = 4000 , V_left = n; 
 
     Recalculate_alfa(M , n, &max_deg, &min_deg, &avg, &alfa , &V_left);
 
     printf("\nmax deg : %d || min deg : %d || avg deg : %f || alfa: %f || V_left: %d\n", max_deg, min_deg, avg,alfa,V_left);
 
-    while( alfa >= 0.51  && max_deg >= 2  && avg > 2 )
+    while( V_left >  0.02 * n )
     {
         
 
@@ -228,7 +229,7 @@ Solution * GRASP(Adj_Matrix * M , int n ,double * elapsed)
         printf("\nmax deg : %d || min deg : %d || avg deg : %f || alfa: %f|| V_left: %d\n", max_deg, min_deg, avg,alfa,V_left);
     }
     post_RCL(M , n , S );
-    print_list(S->V);
+    //print_list(S->V);
     GRASP_post_construction(M , S ,n);
     
     clock_t end = clock();

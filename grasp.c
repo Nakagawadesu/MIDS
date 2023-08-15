@@ -73,18 +73,18 @@ int main()
 
 //char* file_name = "/home/matheus/BHOSLIB_ascii/frb100-40.clq";
 
-
+/*
 char dir[100] = "/home/matheus/dimacs.mis/";
 char graph_name[30] = "brock200_1.mis";
-
+*/
 /*
 char dir[100] = "/home/matheus/Desktop/MIDS/";
 char graph_name[30]= "test_matrix";
 */
-/*
+
 char dir[100] = "/home/matheus/BHOSLIB_ascii/";
 char graph_name[30] = "frb30-15-1.clq";
-*/
+
 
 //char* file_name = "test_matrix";
 //scanf("%s" , &graph_name);
@@ -95,10 +95,10 @@ char graph_name[30] = "frb30-15-1.clq";
 
 
 strcat(dir,graph_name);
-
+srand(time(NULL));
 // INITIALIZE MATRIX
-//Adj_Matrix * Matrix = Initialize_Matrix_BHOSLIB_old(dir,&N_vertex);
-Adj_Matrix * Matrix = Initialize_Matrix_Dimacs(dir,&N_vertex);
+Adj_Matrix * Matrix = Initialize_Matrix_BHOSLIB_old(dir,&N_vertex);
+//Adj_Matrix * Matrix = Initialize_Matrix_Dimacs(dir,&N_vertex);
 
 /*
 print_matrix_degrees(Matrix,N_vertex);
@@ -118,15 +118,15 @@ Solution * S = GRASP(Matrix , N_vertex , &elapsed );
 
 
 printf("\nMin Found :%d \n",S->Min);
- print_solution(S);
+//print_solution(S);
 
 // WRITE RESULTS
 
 
-//char results_dir[100] = "/home/matheus/BHOSLIB_results/";
+char results_dir[100] = "/home/matheus/BHOSLIB_results/";
 //char results_dir[100] = "/home/matheus/ dimacs.mis_results/";
 
-//write_results(results_dir , graph_name , elapsed ,  S->Min);
+write_results(results_dir , graph_name , elapsed ,  S->Min);
 //write_results_sets(results_dir,graph_name,S,elapsed);
 
 // TEST Solution
