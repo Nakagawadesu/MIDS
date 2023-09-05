@@ -6,11 +6,10 @@
 #include <time.h>
 #include "graph.h"
 
-void Find_degree_stats(Adj_Matrix * M , int N, int * max_deg , int * min_deg , float * avg ,int * V_left)
+void Find_degree_stats(Adj_Matrix * M , int N, int * max_deg , int * V_left)
 {
     *max_deg = 0 ;
-    *min_deg = __INT32_MAX__;
-    int sum = 0, vertex_count = 0;
+    int  vertex_count = 0;
     for(int i = 0 ; i <  N ; i++)
     {
         if(M[i].head != NULL)
@@ -19,27 +18,18 @@ void Find_degree_stats(Adj_Matrix * M , int N, int * max_deg , int * min_deg , f
         {
             *max_deg = M[i].degree;
         }
-        if(M[i].degree < *min_deg)
-        {
-            *min_deg = M[i].degree;
-        }
         vertex_count ++;
-        sum += M[i].degree;
         }
         
         
     }
-    if(vertex_count != 0)
-    {   
-        *avg = sum/vertex_count;
-    }
-    
+
     *V_left = vertex_count;
 }
-void Recalculate_alfa (Adj_Matrix * M , int N , int * max_deg , int * min_deg , float * avg , float *alfa , int * V_left)
+void Recalculate_alfa (Adj_Matrix * M , int N , int * max_deg , float *alfa , int * V_left)
 {
    
-    Find_degree_stats(M, N, max_deg, min_deg, avg, V_left);
+    Find_degree_stats(M, N, max_deg,V_left);
     *alfa = 0.5 + ((float)rand()/(float)(RAND_MAX)* 0.375);
     
 }
@@ -212,21 +202,21 @@ Solution * GRASP(Adj_Matrix * M , int n ,double * elapsed)
    
      Solution * S  = create_solution(M , n);
 
-    float alfa ,avg ;
-    int max_deg = 0, min_deg = 4000 , V_left = n; 
+    float alfa  ;
+    int max_deg = 0, V_left = n; 
 
-    Recalculate_alfa(M , n, &max_deg, &min_deg, &avg, &alfa , &V_left);
+    Recalculate_alfa(M , n, &max_deg, &alfa , &V_left);
 
-    printf("\nmax deg : %d || min deg : %d || avg deg : %f || alfa: %f || V_left: %d\n", max_deg, min_deg, avg,alfa,V_left);
+    printf("\nmax deg : %d || alfa: %f || V_left: %d\n", max_deg,alfa,V_left);
 
-    while( V_left >  0.02 * n )
+    while( V_left >  (0.02 * n) && max_deg > (0.02 * n) )
     {
         
 
         S = GRASP_construction( M , n, S , max_deg , alfa);
         
-        Recalculate_alfa(M , n, &max_deg, &min_deg, &avg, &alfa ,&V_left);
-        printf("\nmax deg : %d || min deg : %d || avg deg : %f || alfa: %f|| V_left: %d\n", max_deg, min_deg, avg,alfa,V_left);
+        Recalculate_alfa(M , n, &max_deg, &alfa , &V_left);
+        printf("\nmax deg : %d || alfa: %f|| V_left: %d\n", max_deg,alfa,V_left);
     }
     post_RCL(M , n , S );
     //print_list(S->V);
