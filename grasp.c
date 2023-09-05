@@ -9,15 +9,18 @@ int main()
 {
     
 char dir[100];
+char results_dir[100] ;
 char c;
 scanf("%c" , &c );
 
 if(c == 98)//bhoslib
 {
 strcat(dir,"/home/matheus/BHOSLIB_ascii/");
+strcat(results_dir,"/home/matheus/BHOSLIB_results/");
 printf("C:%c ,dir :%s\n",c,dir);
 }else{//dimacs
 strcat(dir,"/home/matheus/dimacs.mis/");
+strcat(results_dir,"/home/matheus/dimacs.mis_results/");
 printf("C:%c ,dir :%s\n",c,dir);
 }
 
@@ -54,11 +57,7 @@ printf("\nMin Found :%d \n",S->Min);
 //print_solution(S);
 
 // WRITE RESULTS
-
-
-char results_dir[100] = "/home/matheus/BHOSLIB_results/";
-//char results_dir[100] = "/home/matheus/ dimacs.mis_results/";
-
+printf("results_dir :%s\n",results_dir);
 write_results(results_dir , graph_name , elapsed ,  S->Min);
 //write_results_sets(results_dir,graph_name,S,elapsed);
 
