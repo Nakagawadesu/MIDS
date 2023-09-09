@@ -17,7 +17,7 @@
 ### Sobre os Grafos de entrada
 
 >[Repositório de grafos utilizados](https://networkrepository.com/bhoslib.php)
->[Repositório de grafos BHOISLIB original]([https://networkrepository.com/bhoslib.php](https://iridia.ulb.ac.be/~fmascia/maximum_clique/BHOSLIB-benchmark)
+>[Repositório de grafos BHOISLIB original](https://iridia.ulb.ac.be/~fmascia/maximum_clique/BHOSLIB-benchmark)
 >[Repositório de grafos DIMACS 80 instances](https://www-or.amp.i.kyoto-u.ac.jp/members/haraguchi/minids/) 
   
 ### Resultados
