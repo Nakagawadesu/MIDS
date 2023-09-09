@@ -16,12 +16,12 @@
 
 ### Sobre os Grafos de entrada
 
->[Repositório de grafos utilizados](https://networkrepository.com/bhoslib.php)
->[Repositório de grafos BHOISLIB original](https://iridia.ulb.ac.be/~fmascia/maximum_clique/BHOSLIB-benchmark)
->[Repositório de grafos DIMACS 80 instances](https://www-or.amp.i.kyoto-u.ac.jp/members/haraguchi/minids/) 
+- >[Repositório de grafos utilizados](https://networkrepository.com/bhoslib.php)
+- >[Repositório de grafos BHOISLIB original](https://iridia.ulb.ac.be/~fmascia/maximum_clique/BHOSLIB-benchmark)
+- >[Repositório de grafos DIMACS 80 instances](https://www-or.amp.i.kyoto-u.ac.jp/members/haraguchi/minids/) 
   
 ### Resultados
 - O artigo resultante para o evento  SEI-SICITE segue no linkabaixo: 
 ### Referências
->[Artigo do Haraguchi](https://www-or.amp.i.kyoto-u.ac.jp/members/haraguchi/minids/)
+- >[Artigo do Haraguchi](https://www-or.amp.i.kyoto-u.ac.jp/members/haraguchi/minids/)
 
