@@ -1,5 +1,7 @@
 # MIDS
-### Dominância
+### Sobre este repositório
+- Neste Repositório foi desenvolvido uma iniciação científica orientada pelo professor Marco Antonio Barbosa , na qual foi desenvovido um algoríttmo para resolver o problema do MIDS para Grafos massivos.
+### Sobre o MIDS
 - Em teoria dos grafos, um conjunto dominante para um grafo G = (V, E) é um subconjunto D de V de tal modo que cada vértice que não está em D é adjacente a pelo menos um membro de D. O número de dominação γ(G) é o número de vértices em um menor conjunto dominante de G.
 
 - O problema do conjunto dominante refere-se a testar se γ(G) ≤ K para um dado grafo G e entrada K; É um clássico problema de decisão NP-completo em teoria de complexidade computacional (Garey & Johnson 1979). Portanto, acredita-se que não existe um algoritmo eficiente que encontre um menor conjunto dominante para um dado grafo.
@@ -12,16 +14,14 @@
 
 - O conjunto dominante mínimo num grafo não será necessariamente independente, mas o tamanho do conjunto dominante mínimo é sempre inferior ou igual ao tamanho de um máximo conjunto independente mínimo, isto é, γ(G) ≤ i(G).
 
-### Sobre este repositório :pushpin: 
+### Sobre os Grafos de entrada
 
-- O objetivo final é superar o estado atual da arte , utilizando o um algoritimo guloso randomizado e para a busca local a Colonia de Formigas.
-   >[Estado atual da arte](https://www.sciencedirect.com/science/article/abs/pii/S1568494619307306?fr=RR-2&ref=pdf_download&rr=7603ffebed1d00f2)
-- read_file.c contém os algoritimos de ordenação utilizados, a leitura do arquivo ".txt", as estruturas de dado e a solução do problema MIDS.
-- As matrizes utilizadas fazem parte de um grande repositório de dados (BHOSLIB)
-   >[Repositório de grafos utilizados](https://networkrepository.com/bhoslib.php)
--  frb30-15-1.mtx(matriz de 400 vertices)
--  frb100-40.txt(matriz de 4000 vertices)
--  text_matrix(matriz de teste 10 vertices)   
+>[Repositório de grafos utilizados](https://networkrepository.com/bhoslib.php)
+>[Repositório de grafos BHOISLIB original]([https://networkrepository.com/bhoslib.php](https://iridia.ulb.ac.be/~fmascia/maximum_clique/BHOSLIB-benchmark)
+>[Repositório de grafos DIMACS 80 instances](https://www-or.amp.i.kyoto-u.ac.jp/members/haraguchi/minids/) 
   
-### Pseudo Code
-     
+### Resultados
+- O artigo resultante para o evento  SEI-SICITE segue no linkabaixo: 
+### Referências
+>[Artigo do Haraguchi](https://www-or.amp.i.kyoto-u.ac.jp/members/haraguchi/minids/)
+
