@@ -15,12 +15,12 @@ scanf("%c" , &c );
 
 if(c == 98)//bhoslib
 {
-strcat(dir,"/home/matheus/BHOSLIB_ascii/");
-strcat(results_dir,"/home/matheus/BHOSLIB_results/");
+strcat(dir,"/home/matheus/Desktop/mids/MIDS/Graphs/BHOSLIB_ascii");
+strcat(results_dir,"/home/matheus/Desktop/mids/MIDS/Graphs/BHOSLIB_results");
 printf("C:%c ,dir :%s\n",c,dir);
 }else{//dimacs
-strcat(dir,"/home/matheus/dimacs.mis/");
-strcat(results_dir,"/home/matheus/dimacs.mis_results/");
+strcat(dir,"/home/matheus/Desktop/mids/MIDS/Graphs/dimacs.mis");
+strcat(results_dir,"/home/matheus/Desktop/mids/MIDS/Graphs/dimacs.mis_results");
 printf("C:%c ,dir :%s\n",c,dir);
 }
 
