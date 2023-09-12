@@ -30,7 +30,7 @@ void Recalculate_alfa (Adj_Matrix * M , int N , int * max_deg , float *alfa , in
 {
    
     Find_degree_stats(M, N, max_deg,V_left);
-    *alfa = 0.5 + ((float)rand()/(float)(RAND_MAX)* 0.375);
+    *alfa = 0.3 + ((float)rand()/(float)(RAND_MAX)* 0.4);
     
 }
 linked_list * create_RCL(Adj_Matrix * M ,int max_degree , int n ,float alfa )
